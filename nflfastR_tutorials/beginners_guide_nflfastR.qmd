@@ -54,7 +54,7 @@ pbp <- load_pbp(2021:2022) %>%
 
 ```{r}
 jets_pbp <- load_pbp(2022) %>%
-  filter((play_type == "pass" | play_type =="rush"), season_type == "REG", !is.na(posteam), posteam == "NYJ")
+  filter((play_type == "pass" | play_type =="run"), season_type == "REG", !is.na(posteam), posteam == "NYJ")
   
 ```
 
@@ -64,10 +64,18 @@ view(jets_pbp)
 
 ```{r}
 jets_pbp %>%
-  filter(qtr == 4) %>%
-  select(play_id, play_type, epa) %>%
-  ggplot2::ggplot(aes(x = play_id, y = epa, color = play_type)) +
-  geom_point()
+  filter(play_type == "pass") %>%
+  select(play_id, play_type, week, epa) %>%
+  ggplot2::ggplot(aes(x = factor(week), y = epa, fill = factor(play_type))) +
+  geom_boxplot() + geom_jitter(width=0.1, alpha = 0.2)
+```
+
+```{r}
+jets_pbp %>%
+  filter(play_type == "run") %>%
+  select(play_id, play_type, week, epa) %>%
+  ggplot2::ggplot(aes(x = factor(week), y = epa, fill = factor(play_type))) +
+  geom_boxplot() + geom_jitter(width=0.1, alpha = 0.2)
 ```
 
 ## Quarto
