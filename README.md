@@ -1,2 +1,2 @@
 # nflanalytics
-## Autor: Jeffrey Gordon
+## Author: Jeffrey Gordon

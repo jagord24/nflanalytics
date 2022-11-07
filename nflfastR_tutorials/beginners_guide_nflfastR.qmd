@@ -1,0 +1,75 @@
+---
+title: "NFL Fast R Beginner Dic"
+author: "Jeffrey Gordon"
+format: html
+editor: visual
+---
+
+## Import Libraries
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+library(tidyverse)
+library(ggrepel)
+library(nflreadr)
+library(nflplotR)
+options(nflreadr.verbose = FALSE)
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+data <- load_pbp(2019)
+```
+
+## Basics: How to Look at Your Data
+
+```{r}
+#| echo: false
+dim(data)
+```
+
+```{r}
+
+str(data[1:10])
+```
+
+## Viewer
+
+This function will open the data in a new tab in a tabular view.
+
+```{r}
+View(data[1:10])
+```
+
+## EPA for 2022
+
+```{r}
+pbp <- load_pbp(2021:2022) %>%
+  filter((pass == 1 | rush == 1), season_type == "REG", !is.na(posteam), posteam != "") %>%
+  select(play_id, week, season, posteam, pass, defteam, epa)
+```
+
+```{r}
+jets_pbp <- load_pbp(2022) %>%
+  filter((play_type == "pass" | play_type =="rush"), season_type == "REG", !is.na(posteam), posteam == "NYJ")
+  
+```
+
+```{r}
+view(jets_pbp)
+```
+
+```{r}
+jets_pbp %>%
+  filter(qtr == 4) %>%
+  select(play_id, play_type, epa) %>%
+  ggplot2::ggplot(aes(x = play_id, y = epa, color = play_type)) +
+  geom_point()
+```
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
