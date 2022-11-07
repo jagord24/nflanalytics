@@ -1,0 +1,93 @@
+---
+title: "NFL Fast R Beginner Dic"
+author: "Jeffrey Gordon"
+format: gfm
+editor: visual
+---
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(ggrepel)
+library(nflreadr)
+library(nflplotR)
+library(gt)
+library(ggthemes)
+options(nflreadr.verbose = FALSE)
+options(dplyr.summarise.inform = FALSE)
+```
+
+I am going to take a look at the progression of expected points added over the course of the season for the New York Jets offense. I want to break the season into two known chunks: quarterback at the time, and main running back.
+
+```{r}
+#| echo: false
+jets_pbp <- load_pbp(2022) %>%
+  filter(!is.na(posteam), 
+         posteam == "NYJ", 
+         season_type == "REG", 
+         play_type == "pass" | play_type == "run"
+         )
+```
+
+```{r}
+#| echo: false
+# view(jets)
+jets_pbp %>%
+  select(play_type, week) %>%
+  # count(play_type, week) %>%
+  group_by(play_type, week) %>%
+  summarize(count_by_type = n()) %>%
+  ggplot2::ggplot(aes(x=week,y = count_by_type, color=play_type)) + 
+  geom_line() + geom_point() + theme_few() + scale_fill_few() +
+  scale_x_continuous(breaks = 1:max(jets_pbp$week)) + 
+  labs(x = "Week #", y = "# of Plays", title = "NYJ Offensive Plays by Type 2022")
+
+```
+
+```{r}
+#| echo: false
+jets_pbp %>%
+  select(play_type, week) %>%
+  # count(play_type, week) %>%
+  group_by(play_type, week) %>%
+  summarize(count_by_type = n()) %>%
+  pivot_wider(names_from = week,
+              values_from = count_by_type) %>%
+  gt(groupname_col = "group") %>%
+  tab_header(
+    title = "Plays by Type 2022"
+  )
+  
+```
+
+As of the end of week 9 of the 2022 season, the New York Jets have run 561 offensive plays classified as a run or pass according to the nflfastR play-by-play data.
+
+# EPA
+
+What I want to explore next has to do with expected points added (EPA). For more information on how this is calculated you can visit:
+
+-   [nflWAR: A Reproducible Method for Offensive Player Evaluation in Football (Extended Edition)](https://arxiv.org/pdf/1802.00998.pdf)
+
+-   [Calibration for nflfastR models (including expected points)](https://www.opensourcefootball.com/posts/2020-09-28-nflfastr-ep-wp-and-cp-models/#ep-model-features)
+
+I am going to explore the changing expected points over the course of the season.
+
+```{r}
+jets_pbp %>%
+  filter(play_type == "pass") %>%
+  select(play_id, play_type, week, epa) %>%
+  ggplot2::ggplot(aes(x = factor(week), y = epa, fill = factor(play_type))) +
+  geom_boxplot() + geom_jitter(width=0.1, alpha = 0.2) + theme_few()
+```
+
+```{r}
+jets_pbp %>%
+  filter(play_type == "run") %>%
+  select(play_id, play_type, week, epa) %>%
+  ggplot2::ggplot(aes(x = factor(week), y = epa, fill = factor(play_type))) +
+  geom_boxplot() + geom_jitter(width=0.1, alpha = 0.2)
+```
+
+## Citations
+
+Carl S, Baldwin B (2022). *nflfastR: Functions to Efficiently Access NFL Play by Play Data*. https://www.nflfastr.com/, https://github.com/nflverse/nflfastR.

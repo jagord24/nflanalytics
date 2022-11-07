@@ -7,21 +7,12 @@ editor: visual
 
 ## Import Libraries
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
 ```{r}
 library(tidyverse)
 library(ggrepel)
 library(nflreadr)
 library(nflplotR)
 options(nflreadr.verbose = FALSE)
-```
-
-You can add options to executable code like this
-
-```{r}
-#| echo: false
-data <- load_pbp(2019)
 ```
 
 ## Basics: How to Look at Your Data
