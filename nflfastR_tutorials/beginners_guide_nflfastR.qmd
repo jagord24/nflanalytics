@@ -1,7 +1,7 @@
 ---
 title: "NFL Fast R Beginner Dic"
 author: "Jeffrey Gordon"
-format: html
+format: gfm
 editor: visual
 ---
 
