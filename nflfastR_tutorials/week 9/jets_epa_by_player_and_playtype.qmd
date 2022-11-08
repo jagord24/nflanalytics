@@ -13,6 +13,8 @@ library(nflreadr)
 library(nflplotR)
 library(gt)
 library(ggthemes)
+library(knitr)
+library(gtsummary)
 options(nflreadr.verbose = FALSE)
 options(dplyr.summarise.inform = FALSE)
 ```
@@ -52,13 +54,7 @@ jets_pbp %>%
   group_by(play_type, week) %>%
   summarize(count_by_type = n()) %>%
   pivot_wider(names_from = week,
-              values_from = count_by_type) %>%
-  gt(groupname_col = "group") %>%
-  tab_header(
-    title = "Plays by Type 2022"
-  ) %>%
-  fmt_markdown(columns = everything())
-  
+              values_from = count_by_type)
 ```
 
 As of the end of week 9 of the 2022 season, the New York Jets have run 561 offensive plays classified as a run or pass according to the nflfastR play-by-play data.
