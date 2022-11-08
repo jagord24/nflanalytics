@@ -56,7 +56,8 @@ jets_pbp %>%
   gt(groupname_col = "group") %>%
   tab_header(
     title = "Plays by Type 2022"
-  )
+  ) %>%
+  fmt_markdown(columns = everything())
   
 ```
 
