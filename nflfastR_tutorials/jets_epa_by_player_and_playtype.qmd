@@ -1,5 +1,5 @@
 ---
-title: "NFL Fast R Beginner Dic"
+title: "New York Jets Week 9"
 author: "Jeffrey Gordon"
 format: gfm
 editor: visual
